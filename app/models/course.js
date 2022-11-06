@@ -1,11 +1,28 @@
 const { default: mongoose } = require("mongoose");
 
-const CommentSchema = new mongoose.Schema({
-  user: { type: mongoose.Types.ObjectId, ref: "user", required: true },
-  parent: { type: mongoose.Types.ObjectId, ref: "comment", required: true },
-  content: { type: String, required: true },
-  createdAt: { type: Date, default: new Date().getTime() },
-});
+const AnswerSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Types.ObjectId, ref: "user", required: true },
+    content: { type: String, required: true },
+    show: { type: Boolean, required: true, default: false },
+    openToComment: { type: Boolean, default: false },
+  },
+  {
+    timestamps: { createdAt: true },
+  }
+);
+const CommentSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Types.ObjectId, ref: "user", required: true },
+    content: { type: String, required: true },
+    show: { type: Boolean, required: true, default: false },
+    openToComment: { type: Boolean, default: true },
+    answers: { type: [AnswerSchema], default: [] },
+  },
+  {
+    timestamps: { createdAt: true },
+  }
+);
 const Episodes = new mongoose.Schema({
   title: { type: String, required: true },
   text: { type: String, required: true },

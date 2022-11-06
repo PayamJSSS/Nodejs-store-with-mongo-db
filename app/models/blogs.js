@@ -1,11 +1,28 @@
 const { default: mongoose } = require("mongoose");
 
-const CommentSchema = new mongoose.Schema({
-  user: { type: mongoose.Types.ObjectId, ref: "user", required: true },
-  comment: { type: String, required: true },
-  createdAt: { type: Date, default: new Date().getTime() },
-  parent: { type: mongoose.Types.ObjectId },
-});
+const AnswerSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Types.ObjectId, ref: "user", required: true },
+    content: { type: String, required: true },
+    show: { type: Boolean, required: true, default: false },
+    openToComment: { type: Boolean, default: false },
+  },
+  {
+    timestamps: { createdAt: true },
+  }
+);
+const CommentSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Types.ObjectId, ref: "user", required: true },
+    content: { type: String, required: true },
+    show: { type: Boolean, required: true, default: false },
+    openToComment: { type: Boolean, default: true },
+    answers: { type: [AnswerSchema], default: [] },
+  },
+  {
+    timestamps: { createdAt: true },
+  }
+);
 const blogSchema = new mongoose.Schema(
   {
     author: { type: mongoose.Types.ObjectId, ref: "user", required: true },
@@ -15,14 +32,15 @@ const blogSchema = new mongoose.Schema(
     image: { type: String, required: false },
     tags: { type: [String], default: [] },
     category: {
+      ref: "user",
       type: [mongoose.Types.ObjectId],
       ref: "category",
       required: true,
     },
-    coments: { type: [CommentSchema], default: [] },
-    likes: { type: [mongoose.Types.ObjectId], default: [] },
-    dislikes: { type: [mongoose.Types.ObjectId], default: [] },
-    bookmark: { type: [mongoose.Types.ObjectId], default: [] },
+    comments: { type: [CommentSchema], default: [] },
+    likes: { type: [mongoose.Types.ObjectId], ref: "user", default: [] },
+    dislikes: { type: [mongoose.Types.ObjectId], ref: "user", default: [] },
+    bookmarks: { type: [mongoose.Types.ObjectId], ref: "user", default: [] },
   },
   {
     id: false,

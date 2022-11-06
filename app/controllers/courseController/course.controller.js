@@ -95,6 +95,7 @@ class CourseController {
         if (Array.isArray(data[key]) && data[key].length > 0)
           data[key] = data[key].map((item) => item.trim());
       });
+
       if (req.body.finleUploadPath && req.body.fileName) {
         deleteFileInPublic(course.image);
       }
